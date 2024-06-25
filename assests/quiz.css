@@ -1,0 +1,59 @@
+.quiz_main {
+  justify-content: center;
+}
+button {
+  border: turquoise 1px solid;
+  border-radius: 30px;
+  background-color: white;
+  color: rgb(95, 95, 95);
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 25px;
+  font-weight: 100;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.landingpage {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.landingpage div {
+  padding: 5px;
+}
+.instructionPage {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  display: none;
+}
+.instructionPage li {
+  text-align: start;
+  padding: 15px;
+}
+.quiz_container {
+  display: flex;
+  align-items: start;
+  display: none;
+}
+#userForm {
+  padding: 10px;
+}
+#userForm input {
+  border: 0;
+  margin: 15px;
+  height: 20px;
+  width: 300px;
+  padding: 10px;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  font-size: 1rem;
+  color: white;
+  padding: 3px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}

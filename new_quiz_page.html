@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Landing Page</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      label,
+      input {
+        display: block;
+        margin: 10px auto;
+      }
+
+      button {
+        margin: 20px;
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="landingPage">
+      <h1>Welcome to the Quiz</h1>
+      <form id="userForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+        <button type="submit">Start Quiz</button>
+      </form>
+    </div>
+    <div id="instructionPage" style="display: none">
+      <h1>Instructions</h1>
+      <p>
+        Answer all questions to the best of your ability. Click "Start Quiz"
+        when you're ready.
+      </p>
+      <button id="startQuizButton">Start Quiz</button>
+    </div>
+    <div id="quizPage" style="display: none">
+      <h1>Quiz</h1>
+      <form id="quizForm">
+        <div id="questionContainer"></div>
+        <button type="button" id="nextButton" style="display: none">
+          Next
+        </button>
+        <button type="submit" id="submitButton" style="display: none">
+          Submit Quiz
+        </button>
+      </form>
+    </div>
+    <div id="resultPage" style="display: none">
+      <h1>Results</h1>
+      <div id="score"></div>
+      <div id="review"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const landingPage = document.getElementById("landingPage");
+        const instructionPage = document.getElementById("instructionPage");
+        const quizPage = document.getElementById("quizPage");
+        const resultPage = document.getElementById("resultPage");
+
+        const userForm = document.getElementById("userForm");
+        const startQuizButton = document.getElementById("startQuizButton");
+        const quizForm = document.getElementById("quizForm");
+        const questionContainer = document.getElementById("questionContainer");
+        const nextButton = document.getElementById("nextButton");
+        const submitButton = document.getElementById("submitButton");
+
+        const questionsData = [
+          {
+            question: "What is the capital of France?",
+            options: ["Paris", "London", "Berlin", "Madrid"],
+            correct: 0,
+          },
+          {
+            question: "Which planet is known as the Red Planet?",
+            options: ["Earth", "Mars", "Jupiter", "Saturn"],
+            correct: 1,
+          },
+          {
+            question: "Who wrote 'To Kill a Mockingbird'?",
+            options: [
+              "Harper Lee",
+              "Mark Twain",
+              "Ernest Hemingway",
+              "Jane Austen",
+            ],
+            correct: 0,
+          },
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+
+        userForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          landingPage.style.display = "none";
+          instructionPage.style.display = "block";
+        });
+
+        startQuizButton.addEventListener("click", function () {
+          instructionPage.style.display = "none";
+          quizPage.style.display = "block";
+          showQuestion(currentQuestionIndex);
+        });
+
+        nextButton.addEventListener("click", function () {
+          saveAnswer();
+          currentQuestionIndex++;
+          if (currentQuestionIndex < questionsData.length) {
+            showQuestion(currentQuestionIndex);
+          } else {
+            nextButton.style.display = "none";
+            submitButton.style.display = "block";
+          }
+        });
+
+        quizForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          saveAnswer();
+          calculateScore();
+        });
+
+        function showQuestion(index) {
+          const questionData = questionsData[index];
+          questionContainer.innerHTML = `
+            <p>${questionData.question}</p>
+            ${questionData.options
+              .map(
+                (option, i) => `
+                <label>
+                    <input type="radio" name="question${index}" value="${i}" required> ${option}
+                </label>
+            `
+              )
+              .join("")}
+        `;
+          nextButton.style.display = "block";
+          if (index === questionsData.length - 1) {
+            nextButton.style.display = "none";
+            submitButton.style.display = "block";
+          } else {
+            submitButton.style.display = "none";
+          }
+        }
+
+        function saveAnswer() {
+          const formData = new FormData(quizForm);
+          userAnswers[currentQuestionIndex] = formData.get(
+            `question${currentQuestionIndex}`
+          );
+        }
+
+        function calculateScore() {
+          let score = 0;
+          const reviewContainer = document.getElementById("review");
+          reviewContainer.innerHTML = "";
+
+          questionsData.forEach((q, index) => {
+            const userAnswer = userAnswers[index];
+            const isCorrect = userAnswer == q.correct;
+            if (isCorrect) score++;
+
+            const reviewDiv = document.createElement("div");
+            reviewDiv.innerHTML = `
+                <p><strong>Q: ${q.question}</strong></p>
+                <p>Your answer: ${q.options[userAnswer]}</p>
+                <p>Correct answer: ${q.options[q.correct]}</p>
+                <p>${isCorrect ? "Correct" : "Incorrect"}</p>
+            `;
+            reviewContainer.appendChild(reviewDiv);
+          });
+
+          document.getElementById(
+            "score"
+          ).innerText = `Your score is ${score} out of ${questionsData.length}`;
+          quizPage.style.display = "none";
+          resultPage.style.display = "block";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Quiz</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .quiz-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+
+      #quiz-header {
+        margin-bottom: 20px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        margin: 10px 0;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container" id="quiz">
+      <div id="quiz-header">
+        <h2 id="question">Question text</h2>
+        <ul id="quiz-options">
+          <li>
+            <input type="radio" name="answer" class="answer" id="a" /><label
+              for="a"
+              id="a_text"
+              >Answer</label
+            >
+          </li>
+          <li>
+            <input type="radio" name="answer" class="answer" id="b" /><label
+              for="b"
+              id="b_text"
+              >Answer</label
+            >
+          </li>
+          <li>
+            <input type="radio" name="answer" class="answer" id="c" /><label
+              for="c"
+              id="c_text"
+              >Answer</label
+            >
+          </li>
+        </ul>
+      </div>
+      <button id="submit">Submit</button>
+      <div id="results" class="hide">
+        <h2 id="score">Your score is:</h2>
+        <p id="message"></p>
+        <button id="reload">Restart Quiz</button>
+      </div>
+    </div>
+    <!-- <script src="script.js"></script> -->
+    <script>
+      const quizData = [
+        {
+          question: "What color is an airplane's famous black box?",
+          a: "Red",
+          b: "Orange",
+          c: "Black",
+          correct: "b",
+        },
+        {
+          question: "What is the largest social media network in the world?",
+          a: "Twitter",
+          b: "Facebook",
+          c: "Instagram",
+          correct: "b",
+        },
+        {
+          question: "What is the largest mammal on Earth?",
+          a: "Elephant",
+          b: "Blue Whale",
+          c: "Giraffe",
+          correct: "b",
+        },
+        {
+          question: "What year was the iPhone first released in?",
+          a: "2007",
+          b: "2005",
+          c: "2010",
+          correct: "a",
+        },
+      ];
+
+      const quiz = document.getElementById("quiz");
+      const questionEl = document.getElementById("question");
+      const answerEls = document.querySelectorAll(".answer");
+      const a_text = document.getElementById("a_text");
+      const b_text = document.getElementById("b_text");
+      const c_text = document.getElementById("c_text");
+      const submitBtn = document.getElementById("submit");
+      const results = document.getElementById("results");
+      const scoreEl = document.getElementById("score");
+      const messageEl = document.getElementById("message");
+      const reloadBtn = document.getElementById("reload");
+
+      let currentQuiz = 0;
+      let score = 0;
+
+      loadQuiz();
+
+      function loadQuiz() {
+        deselectAnswers();
+        const currentQuizData = quizData[currentQuiz];
+        questionEl.innerText = currentQuizData.question;
+        a_text.innerText = currentQuizData.a;
+        b_text.innerText = currentQuizData.b;
+        c_text.innerText = currentQuizData.c;
+      }
+
+      function deselectAnswers() {
+        answerEls.forEach((answerEl) => (answerEl.checked = false));
+      }
+
+      function getSelected() {
+        let answer;
+        answerEls.forEach((answerEl) => {
+          if (answerEl.checked) {
+            answer = answerEl.id;
+          }
+        });
+        return answer;
+      }
+
+      submitBtn.addEventListener("click", () => {
+        const answer = getSelected();
+        if (answer) {
+          if (answer == quizData[currentQuiz].correct) {
+            score++;
+          }
+          currentQuiz++;
+          if (currentQuiz < quizData.length) {
+            loadQuiz();
+          } else {
+            quiz.classList.add("hide");
+            results.classList.remove("hide");
+            scoreEl.innerText = `Your score is: ${score}/${quizData.length}`;
+            console.log(score, quizData.length);
+            messageEl.innerText =
+              score > quizData.length / 2
+                ? "Congratulations!"
+                : "Better luck next time!";
+          }
+        }
+      });
+
+      reloadBtn.addEventListener("click", () => {
+        currentQuiz = 0;
+        score = 0;
+        results.classList.add("hide");
+        quiz.classList.remove("hide");
+        loadQuiz();
+      });
+    </script>
+  </body>
+</html>
