@@ -1,5 +1,6 @@
 .quiz_main {
   justify-content: center;
+  padding-bottom: 10px;
 }
 button {
   border: turquoise 1px solid;
@@ -40,9 +41,11 @@ button {
   align-items: start;
   display: none;
 }
-#userForm {
-  padding: 10px;
+.quiz_ques {
+  padding-bottom: 10px;
+  justify-content: left;
 }
+
 #userForm input {
   border: 0;
   margin: 15px;
